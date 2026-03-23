@@ -2,7 +2,7 @@
 
 Relay is a desktop accessibility app.
 
-It gives live captions, sound alerts, voice commands, and optional sign-language camera input.
+It gives live captions, sound alerts, voice commands, sign-language camera input, and many other useful features for blind and deaf people.
 
 ## For Judges
 
@@ -14,19 +14,7 @@ Use the **Releases** page for the fastest demo setup:
 - Linux x64 AppImage: `Relay-linux-x64.AppImage`
 - Linux x64 deb: `Relay-linux-x64.deb`
 
-Direct links always point to the newest release:
-
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-mac-arm64.dmg`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-mac-x64.dmg`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-windows-x64-setup.exe`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-linux-x64.AppImage`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-linux-x64.deb`
-
 ## Unsigned Build Note
-
-macOS signing is planned for a later release.
-
-Right now, macOS builds are unsigned. You may need to open the app from **Privacy & Security** and click **Open Anyway**.
 
 Windows may show SmartScreen. Click **More info** then **Run anyway**.
 
@@ -97,7 +85,3 @@ Cloud features will be limited until keys are added.
 ```bash
 npm run verify:strict
 ```
-
-## License
-
-ISC
