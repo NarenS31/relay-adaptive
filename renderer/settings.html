@@ -637,6 +637,94 @@
                     <span class="toggle-slider"></span>
                 </div>
             </div>
+
+            <h2>Priority Engine</h2>
+
+            <div class="toggle-row">
+                <label>Enable Priority Ranking</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-priority-engine">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <label>Use OpenAI Refinement</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-priority-llm">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+            <div class="label-hint" style="max-width:400px;margin-top:8px;">
+                Optional. Rule-based ranking still works without an API key. OpenAI refinement only improves semantic importance scoring.
+            </div>
+
+            <div class="form-group range-row" style="margin-top:16px;">
+                <div class="range-header">
+                    <label>Speech Interrupt Threshold</label>
+                    <span id="priority-threshold-value" class="range-value">8</span>
+                </div>
+                <input type="range" id="setting-priority-threshold" min="5" max="10" value="8">
+            </div>
+
+            <div class="form-group">
+                <label>Preferred Delivery</label>
+                <select id="setting-priority-delivery" class="input-control" style="margin-top:6px;">
+                    <option value="adaptive">Adaptive</option>
+                    <option value="visual">Visual First</option>
+                    <option value="speech">Speech First</option>
+                </select>
+            </div>
+
+            <h2>Personalized Profile</h2>
+
+            <div class="toggle-row">
+                <label>Prioritize Questions</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-prioritize-questions">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <label>Prioritize Action Items</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-prioritize-actions">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <label>Prioritize Name Mentions</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-prioritize-names">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <label>Prioritize Urgent Sounds</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-prioritize-sounds">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <label>Prioritize Screen Changes</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-prioritize-screen">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <label>Suppress Ambient Media</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="setting-suppress-ambient">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
         </div>
 
         <!-- MEETING -->

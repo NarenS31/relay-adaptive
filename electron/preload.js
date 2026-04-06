@@ -65,6 +65,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     askFollowUp: (question, context) => ipcRenderer.invoke('ask-follow-up', question, context),
     captureScreen: (options) => ipcRenderer.invoke('capture-screen', options),
     analyzeImage: (imageData, options) => ipcRenderer.invoke('analyze-image', imageData, options),
+    rankAccessibilityEvent: (payload) => ipcRenderer.invoke('rank-accessibility-event', payload),
 
     // === NEW: Command Bar ===
     executeCommand: (query) => ipcRenderer.invoke('execute-command', query),

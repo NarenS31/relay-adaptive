@@ -31,6 +31,20 @@ import { SoundFeedback } from './sound-feedback.js';
 import { MediaPipeGestureInput } from './mediapipe-gesture-input.js';
 import { ToneCaptioning } from './tone-captioning.js';
 import { ModeSwitcher } from './mode-switcher.js';
+import { EventBus } from './core/event-bus.js';
+import { AppStore } from './core/app-store.js';
+import { FeatureRegistry } from './core/feature-registry.js';
+import { CapabilityRegistry } from './core/capability-registry.js';
+import {
+    HearingAccessibilityController,
+    VisionAccessibilityController,
+    AccessibilityModeCoordinator
+} from './controllers/accessibility-mode-controller.js';
+import { ActionController } from './controllers/action-controller.js';
+import { AudioSessionController } from './controllers/audio-session-controller.js';
+import { AccessibilityPriorityController } from './controllers/accessibility-priority-controller.js';
+import { HearingAssistant } from './services/hearing-assistant.js';
+import { VisionAssistant } from './services/vision-assistant.js';
 import './navigator.js';
 
 // Global error handler
@@ -64,6 +78,14 @@ const gesturePanelDisableBtn = document.getElementById('gesture-panel-disable');
 // SETTINGS
 // ============================================
 let appSettings = {};
+const appBus = new EventBus();
+const appStore = new AppStore();
+const featureRegistry = new FeatureRegistry({ eventBus: appBus, store: appStore });
+const capabilityRegistry = new CapabilityRegistry({
+    electronAPI: window.electronAPI,
+    mediaDevices: navigator.mediaDevices,
+    speechSynthesis: window.speechSynthesis
+});
 const commandRouterState = {
     mode: 'global',
     cooldownMs: 1800,
@@ -539,9 +561,23 @@ const meetingMode = new MeetingMode({
         meetingMode.bindBadgeElement(meetingBadge);
         meetingMode.updateBadge();
         statusTextEl.innerText = `Meeting Mode: ${appInfo.name}`;
+        appStore.setState({
+            meeting: {
+                active: true,
+                summaryAvailable: false
+            }
+        });
+        appBus.emit('meeting.started', { appInfo });
     },
     onMeetingEnd: async (summary) => {
         meetingMode.updateBadge();
+        appStore.setState({
+            meeting: {
+                active: false,
+                summaryAvailable: summary.transcriptCount > 5
+            }
+        });
+        appBus.emit('meeting.ended', summary);
         if (appSettings.meetingAutoSummary && summary.transcriptCount > 5) {
             showMeetingSummaryPrompt(summary);
         }
@@ -594,8 +630,108 @@ const toneCaptioning = new ToneCaptioning(captionRenderer);
 const modeSwitcher = new ModeSwitcher();
 window.modeSwitcher = modeSwitcher;
 
-// Sound Detector (YAMNet-enhanced)
-let soundDetector;
+const hearingAssistant = new HearingAssistant({
+    meetingMode,
+    transcriptStore,
+    captionRenderer,
+    alertSystem,
+    confusionDetector
+});
+
+const visionAssistant = new VisionAssistant({
+    screenExplainer,
+    blindMode,
+    commandBar
+});
+
+const actionController = new ActionController({
+    captionBar,
+    alertOverlay,
+    appStore,
+    appBus,
+    appSettingsRef: () => appSettings,
+    alertSystem,
+    captionRenderer,
+    hearingAssistant,
+    visionAssistant,
+    meetingMode,
+    navigator: {
+        toggle: () => window.cvNavigator?.toggle?.()
+    },
+    electronAPI: window.electronAPI,
+    onMeetingSummary: () => showMeetingSummaryPrompt(),
+    onSpeakActionCompletion: (action, meta) => maybeSpeakActionCompletion(action, meta),
+    onSpeakBlindConfirmation: (message, key, cooldownMs) => speakBlindConfirmation(message, key, cooldownMs),
+    onSetStatusText: (text) => setStatusText(text),
+    onResetListeningStatus: (delayMs) => resetListeningStatus(delayMs)
+});
+
+function handleAction(action, options = {}) {
+    actionController.handleAction(action, options);
+}
+
+const accessibilityPriorityController = new AccessibilityPriorityController({
+    eventBus: appBus,
+    appStore,
+    container: guidanceLayer,
+    electronAPI: window.electronAPI,
+    blindMode,
+    getSettings: () => appSettings,
+    getMode: () => appStore.getState().mode
+});
+accessibilityPriorityController.init();
+
+featureRegistry.register('hearing-tone-captioning', {
+    groups: ['hearing'],
+    start: () => toneCaptioning.activate(),
+    stop: () => toneCaptioning.deactivate()
+});
+
+featureRegistry.register('vision-blind-mode', {
+    groups: ['vision'],
+    start: () => blindMode.activate(),
+    stop: () => blindMode.deactivate()
+});
+
+const hearingModeController = new HearingAccessibilityController({
+    onShowTranscript: () => setTranscriptVisibility(true),
+    onHideTranscript: () => setTranscriptVisibility(false),
+    onSetBlindControls: (enabled) => setBlindModeMinimalControls(enabled),
+    onApplyGestureState: () => applyGestureWidgetForCurrentMode()
+});
+
+const visionModeController = new VisionAccessibilityController({
+    onShowTranscript: () => setTranscriptVisibility(true),
+    onHideTranscript: () => setTranscriptVisibility(false),
+    onSetBlindControls: (enabled) => setBlindModeMinimalControls(enabled),
+    onApplyGestureState: () => applyGestureWidgetForCurrentMode()
+});
+
+const modeCoordinator = new AccessibilityModeCoordinator({
+    store: appStore,
+    eventBus: appBus,
+    persistMode: (mode) => {
+        appSettings.accessibilityMode = mode;
+        try {
+            window.electronAPI?.setSettings?.('accessibilityMode', mode);
+        } catch (error) {
+            console.warn('[Mode] Unable to persist accessibilityMode:', error?.message || error);
+        }
+        document.body.dataset.accessibilityMode = mode;
+    },
+    updateModeIndicator: updateModeIndicatorUi,
+    onAfterModeApplied: () => {
+        featureRegistry.setGroupActive('hearing', appStore.getState().mode === 'deaf');
+        featureRegistry.setGroupActive('vision', appStore.getState().mode === 'blind');
+        requestAnimationFrame(() => {
+            applyMainWidgetOffset(mainWidgetDragState.offsetX, mainWidgetDragState.offsetY);
+        });
+    },
+    controllers: {
+        deaf: hearingModeController,
+        blind: visionModeController
+    }
+});
 
 // ============================================
 // SOURCE SELECTOR
@@ -646,7 +782,7 @@ sourcesSelect.addEventListener('mouseenter', () => {
 });
 
 sourcesSelect.addEventListener('change', async (e) => {
-    startRecording(e.target.value);
+    audioSession.startRecording(e.target.value);
 });
 
 // ============================================
@@ -700,6 +836,42 @@ function setBlindModeMinimalControls(enabled) {
         if (window.cvNavigator && typeof window.cvNavigator.hide === 'function') {
             window.cvNavigator.hide();
         }
+    }
+}
+
+function setTranscriptVisibility(visible) {
+    captionBar.style.display = 'flex';
+    captionBar.style.opacity = '1';
+    if (transcriptEl) {
+        transcriptEl.style.display = visible ? '' : 'none';
+        transcriptEl.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    }
+    if (transcriptBtn) {
+        transcriptBtn.style.display = visible ? '' : 'none';
+    }
+}
+
+function setStatusText(text) {
+    statusTextEl.innerText = text;
+}
+
+function resetListeningStatus(delayMs = 1400) {
+    setTimeout(() => {
+        statusTextEl.innerText = 'Listening (Deepgram Nova-3)';
+    }, delayMs);
+}
+
+function updateModeIndicatorUi(mode) {
+    const indicator = document.getElementById('mode-indicator');
+    if (!indicator) return;
+
+    indicator.className = `mode-indicator ${mode}`;
+    indicator.style.display = 'flex';
+    indicator.setAttribute('aria-label', `Accessibility Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+
+    const modeText = indicator.querySelector('.mode-text');
+    if (modeText) {
+        modeText.textContent = `${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
     }
 }
 
@@ -811,11 +983,17 @@ document.getElementById('export-summary-btn')?.addEventListener('click', async (
 async function showMeetingSummaryPrompt(meetingData) {
     statusTextEl.innerText = "Generating meeting summary...";
     try {
-        const result = await meetingMode.generateSummary();
+        const result = await hearingAssistant.generateMeetingSummary();
         if (result && result.success) {
             meetingSummaryContent.textContent = result.summary;
             meetingSummaryModal.style.display = 'flex';
             window.electronAPI.setIgnoreMouseEvents(false);
+            appStore.setState({
+                meeting: {
+                    active: Boolean(meetingMode.isActive),
+                    summaryAvailable: true
+                }
+            });
         }
     } catch (e) {
         console.error('Summary generation failed:', e);
@@ -890,6 +1068,7 @@ createContextIndicator();
 if (window.electronAPI?.onContextUpdate) {
     window.electronAPI.onContextUpdate((appNameRaw) => {
         const appName = appNameRaw.toLowerCase();
+        appBus.emit('context.updated', { appName: appNameRaw, normalizedAppName: appName });
 
         // Update meeting mode
         if (appSettings.meetingAutoDetect !== false) {
@@ -1080,105 +1259,15 @@ function resolveSpokenGestureCommand(detail, candidate = null) {
 
 if (window.electronAPI?.onShortcut) {
     window.electronAPI.onShortcut((action) => {
-        handleAction(action, { source: 'shortcut' });
+        actionController.handleAction(action, { source: 'shortcut' });
     });
-}
-
-function handleAction(action, { source = 'unknown' } = {}) {
-    switch (action) {
-        case 'toggle-captions':
-            const vis = captionBar.style.display;
-            captionBar.style.display = vis === 'none' ? 'flex' : 'none';
-            maybeSpeakActionCompletion('toggle-captions', { source });
-            break;
-        case 'explain-screen':
-            screenExplainer.toggle();
-            break;
-        case 'command-bar':
-            commandBar.toggle();
-            break;
-        case 'request-guidance':
-            if (appSettings.accessibilityMode === 'blind') {
-                break;
-            }
-            if (window.cvNavigator) window.cvNavigator.toggle();
-            break;
-        case 'dismiss-alerts':
-            alertSystem.dismissAll();
-            alertOverlay.className = '';
-            maybeSpeakActionCompletion('dismiss-alerts', { source });
-            break;
-        case 'caption-larger': {
-            const newSize = captionRenderer.increaseFontSize();
-            if (window.electronAPI?.setSettings) {
-                window.electronAPI.setSettings('captionFontSize', newSize);
-            }
-            break;
-        }
-        case 'caption-smaller': {
-            const newSize = captionRenderer.decreaseFontSize();
-            if (window.electronAPI?.setSettings) {
-                window.electronAPI.setSettings('captionFontSize', newSize);
-            }
-            break;
-        }
-        case 'open-settings':
-            window.electronAPI.openSettings();
-            maybeSpeakActionCompletion('open-settings', { source });
-            break;
-        case 'meeting-summary':
-            if (meetingMode.isActive) {
-                showMeetingSummaryPrompt();
-                maybeSpeakActionCompletion('meeting-summary', { source });
-            } else {
-                statusTextEl.innerText = 'No active meeting';
-                setTimeout(() => {
-                    statusTextEl.innerText = 'Listening (Deepgram Nova-3)';
-                }, 1400);
-                speakBlindConfirmation('No active meeting', 'meeting-summary-empty', 1000);
-            }
-            break;
-        case 'meeting-toggle': {
-            const isActive = typeof meetingMode.toggleManualSession === 'function'
-                ? meetingMode.toggleManualSession()
-                : meetingMode.isActive;
-            meetingMode.updateBadge();
-            statusTextEl.innerText = isActive ? 'Meeting mode active' : 'Meeting mode ended';
-            setTimeout(() => {
-                statusTextEl.innerText = 'Listening (Deepgram Nova-3)';
-            }, 1400);
-            maybeSpeakActionCompletion('meeting-toggle', { source, extra: isActive ? 'Meeting mode active' : 'Meeting mode ended' });
-            break;
-        }
-        case 'show-transcripts':
-            if (appSettings.accessibilityMode === 'blind') {
-                break;
-            }
-            if (window.electronAPI.openTranscriptViewer) {
-                window.electronAPI.openTranscriptViewer();
-                maybeSpeakActionCompletion('show-transcripts', { source });
-            }
-            break;
-        case 'stop-all':
-            try { window.speechSynthesis?.cancel?.(); } catch (e) {}
-            try { screenExplainer.hide?.(); } catch (e) {}
-            try { commandBar.hide?.(); } catch (e) {}
-            statusTextEl.innerText = 'Stopped';
-            setTimeout(() => {
-                statusTextEl.innerText = 'Listening (Deepgram Nova-3)';
-            }, 1200);
-            maybeSpeakActionCompletion('stop-all', { source });
-            break;
-        default:
-            console.log('Unknown action:', action);
-    }
 }
 
 // Allow BlindMode and other modules to request the same centralized actions.
 window.addEventListener('action-request', (event) => {
     const action = event?.detail?.action;
     if (!action) return;
-    handleAction(action, { source: event?.detail?.source || 'event' });
+    actionController.handleAction(action, { source: event?.detail?.source || 'event' });
 });
 
 window.addEventListener('command-executed', (event) => {
@@ -1186,6 +1275,7 @@ window.addEventListener('command-executed', (event) => {
     const status = detail.success ? 'success' : 'miss';
     const command = detail.command || 'unknown';
     const source = detail.source || 'unknown';
+    appBus.emit('command.executed', detail);
     window.electronAPI?.log?.(`[CommandRouter] ${status} command=${command} source=${source} phrase=\"${detail.normalized || ''}\"`);
     if (detail.success) {
         statusTextEl.innerText = `Command: ${command}`;
@@ -1197,6 +1287,7 @@ window.addEventListener('command-executed', (event) => {
 
 window.addEventListener('automation-executed', (event) => {
     const detail = event?.detail || {};
+    appBus.emit('automation.executed', detail);
     window.electronAPI?.log?.(
         `[Automation] ${detail.success ? 'success' : 'miss'} intent=${detail.intent || 'unknown'} ` +
         `risk=${detail.risk || 'medium'} source=${detail.source || 'unknown'} ` +
@@ -1209,6 +1300,7 @@ window.addEventListener('gesture-model-health', (event) => {
     const detail = event?.detail || {};
     const fps = Number(detail.fps || 0).toFixed(1);
     const inference = Number(detail.inference_ms_median || 0).toFixed(2);
+    appBus.emit('gesture.health', detail);
     window.electronAPI?.log?.(
         `[GestureModel] fps=${fps} inference_ms=${inference} ` +
         `frames=${Number(detail.frames || 0)} backend=${detail.backend || 'unknown'}`
@@ -1225,6 +1317,7 @@ if (window.electronAPI?.onSettingsChanged) {
         } else {
             appSettings[key] = value;
         }
+        appStore.setState({ settings: appSettings });
         syncCommandRouterSettings();
         // Apply relevant settings
         captionRenderer.updateSettings(appSettings);
@@ -1236,251 +1329,6 @@ if (window.electronAPI?.onSettingsChanged) {
             confusionDetector.setUserNames(appSettings.userNames);
         }
     });
-}
-
-// ============================================
-// DEEPGRAM STREAMING TRANSCRIPTION
-// ============================================
-let useWhisperFallback = false;
-let whisperWorker = null;
-let audioContext = null;
-let mediaStream = null;
-let scriptProcessor = null;
-let isRecording = false;
-let isDeepgramStreaming = false;
-
-function setupDeepgramListeners() {
-    window.electronAPI.onDeepgramTranscript((result) => {
-        if (result.transcript && result.transcript.trim()) {
-            if (result.isFinal) {
-                captionRenderer.addFinalSegment(result);
-
-                // Global voice command bridge for short command-like phrases
-                routeCommandInput(result.transcript, 'deepgram');
-
-                // Store transcript
-                transcriptStore.store({
-                    text: result.transcript,
-                    words: result.words,
-                    speaker: result.words?.[0]?.speaker ?? null,
-                    confidence: result.confidence,
-                    timestamp: Date.now(),
-                });
-
-                // Feed to meeting mode
-                meetingMode.addTranscript(result);
-
-                // Check for name mentions
-                if (result.words) {
-                    const nameMention = captionRenderer.checkNameMention(result.words);
-                    if (nameMention) {
-                        alertSystem.show({
-                            category: 'nameMention',
-                            label: `"${nameMention}" was mentioned`,
-                            detail: result.transcript,
-                        });
-                        confusionDetector.onNameMentioned(nameMention);
-                    }
-                }
-
-                statusTextEl.innerText = "Listening (Deepgram Nova-3)";
-            } else {
-                captionRenderer.setInterim(result);
-                statusTextEl.innerText = "Transcribing...";
-            }
-
-            confusionDetector.recordActivity();
-        }
-    });
-
-    window.electronAPI.onDeepgramStatus((status) => {
-        if (status.connected) {
-            isDeepgramStreaming = true;
-            statusTextEl.innerText = "Connected (Deepgram Nova-3)";
-            dotEl.classList.add('active');
-        } else {
-            isDeepgramStreaming = false;
-            statusTextEl.innerText = status.error ? `Error: ${status.error}` : "Disconnected";
-            dotEl.classList.remove('active');
-        }
-    });
-
-    window.electronAPI.onDeepgramUtteranceEnd(() => {
-        window.electronAPI.log("Utterance ended");
-    });
-}
-
-function initWhisper() {
-    if (whisperWorker) return;
-    statusTextEl.innerText = "Initializing Offline Engine...";
-    whisperWorker = new Worker('whisper-worker.js', { type: 'module' });
-    whisperWorker.onmessage = (e) => {
-        const { status, text } = e.data;
-        if (status === 'ready') statusTextEl.innerText = "Offline Engine Ready";
-        if (status === 'result' && text?.trim()) {
-            captionRenderer.addFinalSegment({ transcript: text, words: [], confidence: 0.5 });
-        }
-    };
-    whisperWorker.postMessage({ type: 'load' });
-}
-
-async function startRecording(sourceId = 'mic') {
-    // Cleanup
-    if (scriptProcessor) scriptProcessor.disconnect();
-    if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
-    if (audioContext && audioContext.state !== 'closed') audioContext.close();
-    isRecording = false;
-    captionRenderer.clear();
-
-    try {
-        if (sourceId === 'mic') {
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    channelCount: 1,
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
-            });
-            statusTextEl.innerText = "Listening (Microphone)";
-        } else if (sourceId === 'system-audio') {
-            // System audio via desktopCapturer
-            const sources = await window.electronAPI.getSources();
-            const screenSource = sources.find(s => s.id.startsWith('screen:'));
-            if (!screenSource) {
-                statusTextEl.innerText = "Screen Recording permission required";
-                return;
-            }
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: screenSource.id
-                    }
-                },
-                video: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: screenSource.id,
-                        maxWidth: 1,
-                        maxHeight: 1,
-                    }
-                }
-            });
-            // Stop video tracks - we only want audio
-            mediaStream.getVideoTracks().forEach(t => t.stop());
-            statusTextEl.innerText = "Listening (System Audio)";
-        } else {
-            // Specific window/screen source
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: sourceId
-                    }
-                },
-                video: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: sourceId
-                    }
-                }
-            });
-            mediaStream.getVideoTracks().forEach(t => t.stop());
-            statusTextEl.innerText = "Listening (System Audio)";
-        }
-
-        audioContext = new AudioContext({ sampleRate: 16000 });
-        const source = audioContext.createMediaStreamSource(mediaStream);
-
-        // Setup ML sound detector (falls back to heuristic while model loads)
-        soundDetector = new MLSoundDetector(audioContext);
-        soundDetector.onDetect((event) => {
-            if (event.category === 'media' && event.isMusic) {
-                musicVisualizer.show({ genre: event.className });
-            } else if (event.category !== 'media') {
-                // Clear music vis when non-music detected
-                musicVisualizer.hide();
-            }
-
-            // Show alert for non-media categories
-            if (event.category !== 'media' || appSettings.alertCategories?.media) {
-                alertSystem.show({
-                    category: event.category,
-                    label: event.label,
-                    detail: null,
-                    className: event.className,
-                });
-            }
-
-            // Dispatch sound detection event for cross-module accessibility cues
-            window.dispatchEvent(new CustomEvent('sound-detected', {
-                detail: {
-                    category: event.category,
-                    label: event.label,
-                    direction: event.direction || 'center',
-                    timestamp: Date.now()
-                }
-            }));
-
-            // Legacy alert overlay flash
-            const type = event.category === 'emergency' ? 'danger' : 'warning';
-            alertOverlay.className = type + " active";
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            setTimeout(() => { alertOverlay.className = ""; }, 2000);
-        });
-        // Use mono path for microphone capture; reserve stereo path for desktop/system capture.
-        const preferStereoDetection = sourceId !== 'mic';
-        soundDetector.connect(source, preferStereoDetection);
-
-        // Setup directional audio
-        directionalAudio.connect(audioContext, source);
-
-        // Connect music visualizer analyser
-        const visAnalyser = audioContext.createAnalyser();
-        visAnalyser.fftSize = 256;
-        source.connect(visAnalyser);
-        musicVisualizer.connectAnalyser(visAnalyser);
-
-        // Start Deepgram
-        const startResult = await window.electronAPI.deepgramStart();
-        if (startResult.success) {
-            statusTextEl.innerText = "Connecting to Deepgram...";
-
-            scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
-            source.connect(scriptProcessor);
-            scriptProcessor.connect(audioContext.destination);
-
-            scriptProcessor.onaudioprocess = (e) => {
-                const inputData = e.inputBuffer.getChannelData(0);
-                const int16Data = float32ToInt16(inputData);
-                if (isDeepgramStreaming) {
-                    window.electronAPI.deepgramSendAudio(Array.from(int16Data));
-                }
-                drawVisualizer(inputData);
-            };
-
-            isRecording = true;
-            dotEl.classList.add('listening');
-            dotEl.classList.add('active');
-        } else {
-            throw new Error(startResult.error || "Failed to connect to Deepgram");
-        }
-    } catch (err) {
-        window.electronAPI.log("Recording error: " + err);
-        statusTextEl.innerText = "Error: " + err.message;
-        useWhisperFallback = true;
-        initWhisper();
-    }
-}
-
-function float32ToInt16(float32Array) {
-    const int16Array = new Int16Array(float32Array.length);
-    for (let i = 0; i < float32Array.length; i++) {
-        const s = Math.max(-1, Math.min(1, float32Array[i]));
-        int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
-    }
-    return int16Array;
 }
 
 function drawVisualizer(data) {
@@ -1505,9 +1353,50 @@ function drawVisualizer(data) {
     }
 }
 
+const audioSession = new AudioSessionController({
+    electronAPI: window.electronAPI,
+    mediaDevices: navigator.mediaDevices,
+    AudioContextCtor: window.AudioContext,
+    WorkerCtor: window.Worker,
+    SoundDetectorClass: MLSoundDetector,
+    captionRenderer,
+    alertSystem,
+    musicVisualizer,
+    directionalAudio,
+    alertOverlay,
+    appStore,
+    appBus,
+    hearingAssistant,
+    onRouteCommandInput: (text, source) => routeCommandInput(text, source),
+    onSetStatusText: (text) => setStatusText(text),
+    onSetDotActive: (active) => dotEl.classList.toggle('active', Boolean(active)),
+    onSetDotListening: (active) => dotEl.classList.toggle('listening', Boolean(active)),
+    onVisualizerFrame: (data) => drawVisualizer(data),
+    onSoundDetected: (event) => {
+        appStore.setState({
+            lastSoundEvent: {
+                category: event.category,
+                label: event.label,
+                direction: event.direction || 'center',
+                timestamp: Date.now()
+            }
+        });
+        appBus.emit('sound.detected', event);
+        window.dispatchEvent(new CustomEvent('sound-detected', {
+            detail: {
+                category: event.category,
+                label: event.label,
+                direction: event.direction || 'center',
+                timestamp: Date.now()
+            }
+        }));
+    },
+    getAlertCategories: () => appSettings.alertCategories || {}
+});
+
 // Cleanup
 window.addEventListener('beforeunload', async () => {
-    try { await window.electronAPI.deepgramStop(); } catch (e) {}
+    try { await audioSession.stop(); } catch (e) {}
     try { gestureInput.stop(); } catch (e) {}
 });
 
@@ -1598,66 +1487,7 @@ window.addEventListener('mode-changed', (e) => {
     const mode = rawMode === 'blind' ? 'blind' : 'deaf';
     const previousMode = e?.detail?.previousMode || null;
     console.log(`[App] Mode changed from ${previousMode} to ${mode}`);
-
-    // Single source of truth for mode persistence.
-    appSettings.accessibilityMode = mode;
-    try {
-        window.electronAPI?.setSettings?.('accessibilityMode', mode);
-    } catch (error) {
-        console.warn('[Mode] Unable to persist accessibilityMode:', error?.message || error);
-    }
-    document.body.dataset.accessibilityMode = mode;
-
-    // Update mode indicator
-    const modeIndicator = document.getElementById('mode-indicator');
-    if (modeIndicator) {
-        modeIndicator.className = `mode-indicator ${mode}`;
-        modeIndicator.style.display = 'flex';
-        modeIndicator.setAttribute('aria-label', `Accessibility Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
-        const modeText = modeIndicator.querySelector('.mode-text');
-        if (modeText) {
-            modeText.textContent = `${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
-        }
-
-    }
-
-    // Handle mode-specific features
-    switch(mode) {
-        case 'deaf':
-            blindMode.deactivate();
-            setBlindModeMinimalControls(false);
-            applyGestureWidgetForCurrentMode();
-            if (transcriptBtn) transcriptBtn.style.display = '';
-            // Activate tone captioning
-            toneCaptioning.activate();
-            // Ensure captions are visible
-            captionBar.style.display = 'flex';
-            captionBar.style.opacity = '1';
-            if (transcriptEl) {
-                transcriptEl.style.display = '';
-                transcriptEl.setAttribute('aria-hidden', 'false');
-            }
-            break;
-        case 'blind':
-            blindMode.activate();
-            setBlindModeMinimalControls(true);
-            applyGestureWidgetForCurrentMode();
-            if (transcriptBtn) transcriptBtn.style.display = 'none';
-            // Deactivate tone captioning (not needed for blind)
-            toneCaptioning.deactivate();
-            // Keep toolbar/settings UI visible in blind mode, but hide transcript captions.
-            captionBar.style.display = 'flex';
-            captionBar.style.opacity = '1';
-            if (transcriptEl) {
-                transcriptEl.style.display = 'none';
-                transcriptEl.setAttribute('aria-hidden', 'true');
-            }
-            break;
-    }
-
-    requestAnimationFrame(() => {
-        applyMainWidgetOffset(mainWidgetDragState.offsetX, mainWidgetDragState.offsetY);
-    });
+    modeCoordinator.applyMode(mode, { previousMode });
 });
 
 window.addEventListener('resize', () => {
@@ -3470,6 +3300,10 @@ window.__relayCommandRouterReady = true;
 // ============================================
 (async function init() {
     await loadSettings();
+    appStore.setState({
+        settings: appSettings,
+        status: 'starting'
+    });
 
     // Accessibility command-router defaults.
     try {
@@ -3554,6 +3388,14 @@ window.__relayCommandRouterReady = true;
     } catch (error) {
         console.warn('Unable to apply startup defaults:', error?.message || error);
     }
+
+    const capabilities = await capabilityRegistry.collect();
+    appStore.setState({
+        settings: appSettings,
+        capabilities,
+        mode: appSettings.accessibilityMode || 'deaf'
+    });
+    appBus.emit('capabilities.ready', capabilities);
     syncCommandRouterSettings();
 
     // Apply settings to modules
@@ -3573,7 +3415,7 @@ window.__relayCommandRouterReady = true;
     }
 
     // Setup listeners
-    setupDeepgramListeners();
+    audioSession.setupDeepgramListeners();
 
     if (appSettings.premiumAutomationEnabled === true && window.electronAPI?.desktopAutomationStatus) {
         window.electronAPI.desktopAutomationStatus()
@@ -3674,6 +3516,6 @@ window.__relayCommandRouterReady = true;
 
     // Auto-start
     window.electronAPI.log("Starting Relay with Deepgram Nova-3 streaming...");
-    startRecording('mic');
+    audioSession.startRecording('mic');
     refreshSources();
 })();

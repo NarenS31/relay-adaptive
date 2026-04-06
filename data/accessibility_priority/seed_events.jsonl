@@ -1,0 +1,138 @@
+{"event_type": "screen", "mode": "blind", "text": "Primary action button became available.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The group mentioned snacks earlier.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "emergency siren nearby", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "emergency"}
+{"event_type": "transcript", "mode": "deaf", "text": "Can you review the final slide before we start?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We are switching topics now.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, can you mute the microphone?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, can you submit the form?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "There is a note in the chat about tomorrow.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Critical warning: microphone permission denied.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "I was just talking about lunch earlier.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Fire alarm, everyone evacuate immediately.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Theme colors updated.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Join meeting dialog opened and is focused.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, can you submit the form?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Please click the Join button.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Confirmation modal appeared with Accept and Cancel buttons.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Warning, the lab alarm is going off right now.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "phone ringing repeatedly", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "attention"}
+{"event_type": "transcript", "mode": "deaf", "text": "The group mentioned weekend plans earlier.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "I was thinking about music during lunch.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We can chat about that later maybe.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Password field is invalid and highlighted.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Secondary toolbar became visible.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "An informational badge appeared in the footer.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, please answer the question right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, can you mute the microphone?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, please open the assignment right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Emergency alert. Exit the room immediately.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, can you click the Join button?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Can you submit the assignment before class ends?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, can you submit the form?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, please submit the form as soon as possible.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "printer started running", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "appliance"}
+{"event_type": "sound", "mode": "deaf", "text": "soft crowd noise", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "media"}
+{"event_type": "transcript", "mode": "deaf", "text": "The class roster changed this morning.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "I was thinking about the weather during lunch.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "door knock detected", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "attention"}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, please click the Join button before class ends.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Um, okay, I guess that makes sense.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "chair movement in background", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "media"}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, can you mute the microphone?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, please submit the form immediately.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, can you click the Join button?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, please mute the microphone immediately.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "meeting", "mode": "deaf", "text": "Teams meeting is active", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, please click the Join button right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The next slide has the project timeline.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "microwave timer finished", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "attention"}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, leave now. This is an emergency.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Join the meeting and reply when you are in.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We should probably review the agenda soon.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, can you answer the question?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "There might be a new update in the portal.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, open Zoom and unmute yourself.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "timer alert sounding", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "attention"}
+{"event_type": "sound", "mode": "deaf", "text": "appliance beep detected", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "appliance"}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, can you mute the microphone?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, can you submit the form?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "meeting", "mode": "deaf", "text": "Manual meeting tracking started", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We can talk about sports later.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, please submit the form as soon as possible.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We can talk about the weather later.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Stop and evacuate now, the building alarm is active.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, can you open the assignment?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "The page scrolled to a new section.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "I was thinking about sports during lunch.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The group mentioned music earlier.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, please click the Join button right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, can you open the assignment?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, please submit the form before class ends.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The assignment is due tomorrow afternoon.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, can you open the assignment?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, please click the Join button right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We can talk about snacks later.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, can you click the Join button?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "fire alarm detected", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "emergency"}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, please open the assignment right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "The active window changed to Chrome.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "You are presenting next, get ready now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, can you answer the question?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Please answer the teacher right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "notification chime detected", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "appliance"}
+{"event_type": "transcript", "mode": "deaf", "text": "The weather is nice today.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The group mentioned sports earlier.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "loud evacuation alarm", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "emergency"}
+{"event_type": "sound", "mode": "deaf", "text": "low media playback detected", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "media"}
+{"event_type": "transcript", "mode": "deaf", "text": "I was thinking about weekend plans during lunch.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "A new browser tab opened.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "I think the next section starts after lunch.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, can you answer the question?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "I like the background music in here.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, can you answer the question?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, can you open the assignment?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "Payment failed. Confirm your card immediately.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, please answer the question right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, please open the assignment right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We can talk about music later.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "Error banner appeared at the top of the page.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "meeting", "mode": "deaf", "text": "Zoom meeting started", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "You may want to check the shared document later.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Sidebar navigation expanded.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Jordan, please mute the microphone immediately.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "A non-blocking notification appeared.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "meeting", "mode": "deaf", "text": "Google Meet is now the frontmost app", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, please open the assignment immediately.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "keyboard tapping nearby", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "appliance"}
+{"event_type": "transcript", "mode": "deaf", "text": "This is just casual conversation.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We can talk about weekend plans later.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Yeah, that was kind of funny.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "someone calling your name nearby", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "attention"}
+{"event_type": "screen", "mode": "blind", "text": "Background animation changed slightly.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "smoke detector alarm triggered", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "emergency"}
+{"event_type": "transcript", "mode": "deaf", "text": "That song is still playing.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "security alarm sounding", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "emergency"}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, please mute the microphone right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "We were joking around before class.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The group mentioned the weather earlier.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "The group can discuss the draft after class.", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Open the attachment and send it to the team.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "A non-essential illustration became visible.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "background music detected", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "media"}
+{"event_type": "transcript", "mode": "deaf", "text": "I was thinking about snacks during lunch.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "screen", "mode": "blind", "text": "An error dialog blocked the screen and requires action.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, mute your microphone before speaking.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, please answer the question as soon as possible.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, can you click the Join button?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Someone is humming quietly.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Decorative image loaded on the page.", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Submit button is now enabled.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "A permission popup appeared in the center of the screen.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Relay, please answer the question as soon as possible.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "sound", "mode": "deaf", "text": "ambient television audio", "label": "low", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "media"}
+{"event_type": "screen", "mode": "blind", "text": "The download completed and requires confirmation.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "screen", "mode": "blind", "text": "Security warning dialog requires confirmation now.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "sound", "mode": "deaf", "text": "dishwasher beep heard", "label": "medium", "user_names": ["Alex", "Suhaan", "Relay"], "sound_category": "appliance"}
+{"event_type": "screen", "mode": "blind", "text": "Your session expired and submission failed.", "label": "critical", "user_names": ["Alex", "Suhaan", "Relay"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Suhaan, please mute the microphone right now.", "label": "high", "user_names": ["Alex", "Suhaan", "Relay", "Jordan"]}
+{"event_type": "transcript", "mode": "deaf", "text": "Alex, can you answer that question now?", "label": "high", "user_names": ["Alex", "Suhaan", "Relay"]}

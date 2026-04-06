@@ -41,6 +41,28 @@ const DEFAULTS = {
     aiProactivityLevel: 'balanced',
     aiExplanationDetail: 'normal',
     guideModeEnabled: true,
+    priorityEngineEnabled: true,
+    priorityEngineUseLlm: false,
+    priorityInterruptThreshold: 8,
+    accessibilityPriorityProfile: {
+        profileName: 'Focused',
+        detailLevel: 'balanced',
+        prioritizeQuestions: true,
+        prioritizeActionItems: true,
+        prioritizeNameMentions: true,
+        prioritizeUrgentSounds: true,
+        prioritizeScreenChanges: true,
+        suppressAmbientAudio: true,
+        preferredDelivery: 'adaptive',
+        weights: {
+            question: 2,
+            action: 2,
+            directAddress: 2,
+            urgency: 3,
+            screenChange: 2,
+            ambientPenalty: -2
+        }
+    },
 
     // Meeting
     meetingAutoDetect: true,

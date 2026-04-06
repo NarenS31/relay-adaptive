@@ -75,6 +75,32 @@ function bindTextInput(id, settingsKey) {
     });
 }
 
+function bindProfileToggle(id, profileKey) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const profile = currentSettings.accessibilityPriorityProfile || {};
+    el.checked = profile[profileKey] !== false;
+    el.addEventListener('change', () => {
+        if (!currentSettings.accessibilityPriorityProfile) currentSettings.accessibilityPriorityProfile = {};
+        currentSettings.accessibilityPriorityProfile[profileKey] = el.checked;
+        api.setSettings('accessibilityPriorityProfile', currentSettings.accessibilityPriorityProfile);
+    });
+}
+
+function bindProfileSelect(id, profileKey) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const profile = currentSettings.accessibilityPriorityProfile || {};
+    if (profile[profileKey] !== undefined) {
+        el.value = profile[profileKey];
+    }
+    el.addEventListener('change', () => {
+        if (!currentSettings.accessibilityPriorityProfile) currentSettings.accessibilityPriorityProfile = {};
+        currentSettings.accessibilityPriorityProfile[profileKey] = el.value;
+        api.setSettings('accessibilityPriorityProfile', currentSettings.accessibilityPriorityProfile);
+    });
+}
+
 function bindTagInput(id, settingsKey) {
     const container = document.getElementById(id);
     if (!container) return;
@@ -213,6 +239,16 @@ function populateAll() {
     bindSelect('setting-ai-proactivity', 'aiProactivityLevel');
     bindSelect('setting-ai-detail', 'aiExplanationDetail');
     bindToggle('setting-guide-mode', 'guideModeEnabled');
+    bindToggle('setting-priority-engine', 'priorityEngineEnabled');
+    bindToggle('setting-priority-llm', 'priorityEngineUseLlm');
+    bindRange('setting-priority-threshold', 'priorityInterruptThreshold', 'priority-threshold-value');
+    bindProfileSelect('setting-priority-delivery', 'preferredDelivery');
+    bindProfileToggle('setting-prioritize-questions', 'prioritizeQuestions');
+    bindProfileToggle('setting-prioritize-actions', 'prioritizeActionItems');
+    bindProfileToggle('setting-prioritize-names', 'prioritizeNameMentions');
+    bindProfileToggle('setting-prioritize-sounds', 'prioritizeUrgentSounds');
+    bindProfileToggle('setting-prioritize-screen', 'prioritizeScreenChanges');
+    bindProfileToggle('setting-suppress-ambient', 'suppressAmbientAudio');
 
     // Meeting
     bindToggle('setting-meeting-detect', 'meetingAutoDetect');

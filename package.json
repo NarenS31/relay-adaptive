@@ -16,6 +16,8 @@
     "verify:sound-alert-rules": "node scripts/verify-sound-alert-rules.js",
     "verify:premium-automation": "node scripts/verify-premium-automation.js",
     "verify:strict": "npm run -s verify:voice-commands && npm run -s verify:gesture-migration && npm run -s verify:sound-alert-rules && npm run -s verify:premium-automation",
+    "train:priority-model": "python3 scripts/train_accessibility_ranker.py",
+    "eval:priority-model": "python3 scripts/train_accessibility_ranker.py",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

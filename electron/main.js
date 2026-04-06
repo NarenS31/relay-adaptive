@@ -3670,6 +3670,54 @@ Be concise but don't miss important details.`
     }
 });
 
+ipcMain.handle('rank-accessibility-event', async (_event, payload = {}) => {
+    try {
+        const openai = getOpenAIClient();
+        const eventType = String(payload?.event?.type || 'generic');
+        const mode = String(payload?.mode || 'deaf');
+        const base = payload?.base || {};
+        const profile = payload?.profile || {};
+
+        const response = await openai.chat.completions.create({
+            model: FAST_TEXT_MODEL,
+            temperature: 0.1,
+            messages: [
+                {
+                    role: 'system',
+                    content: `You rank accessibility events for users with hearing or vision disabilities.
+Return strict JSON with keys: score, priority, reason, delivery.
+score must be 1-10.
+priority must be one of: low, medium, high, critical.
+delivery must be an array using only: priority-card, tts, caption-pin, history.
+Be conservative. Only raise priority when the event is likely urgent, actionable, or directly relevant.`
+                },
+                {
+                    role: 'user',
+                    content: JSON.stringify({
+                        mode,
+                        eventType,
+                        profile,
+                        base
+                    })
+                }
+            ],
+            max_tokens: 180
+        });
+
+        const content = String(response?.choices?.[0]?.message?.content || '').trim();
+        const parsed = JSON.parse(content.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/, ''));
+        return {
+            success: true,
+            score: Number(parsed.score || base.score || 5),
+            priority: String(parsed.priority || base.priority || 'medium'),
+            reason: String(parsed.reason || base.reason || ''),
+            delivery: Array.isArray(parsed.delivery) ? parsed.delivery : base.delivery
+        };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+});
+
 // ============================================
 // NEW: TRANSCRIPT EXPORT
 // ============================================

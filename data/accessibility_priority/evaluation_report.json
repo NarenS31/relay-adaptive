@@ -1,0 +1,156 @@
+{
+  "dataset_path": "data/accessibility_priority/seed_events.jsonl",
+  "model_path": "assets/models/accessibility-priority-model.json",
+  "train_evaluation": {
+    "size": 111,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "per_label": {
+      "low": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 26
+      },
+      "medium": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 20
+      },
+      "high": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 54
+      },
+      "critical": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 11
+      }
+    },
+    "confusion_matrix": {
+      "low": {
+        "low": 26,
+        "medium": 0,
+        "high": 0,
+        "critical": 0
+      },
+      "medium": {
+        "low": 0,
+        "medium": 20,
+        "high": 0,
+        "critical": 0
+      },
+      "high": {
+        "low": 0,
+        "medium": 0,
+        "high": 54,
+        "critical": 0
+      },
+      "critical": {
+        "low": 0,
+        "medium": 0,
+        "high": 0,
+        "critical": 11
+      }
+    },
+    "misclassified_examples": []
+  },
+  "validation_evaluation": {
+    "size": 27,
+    "accuracy": 0.8148,
+    "macro_f1": 0.615,
+    "per_label": {
+      "low": {
+        "precision": 0.9,
+        "recall": 1.0,
+        "f1": 0.9474,
+        "support": 9
+      },
+      "medium": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 1
+      },
+      "high": {
+        "precision": 0.8462,
+        "recall": 0.8462,
+        "f1": 0.8462,
+        "support": 13
+      },
+      "critical": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "support": 4
+      }
+    },
+    "confusion_matrix": {
+      "low": {
+        "low": 9,
+        "medium": 0,
+        "high": 0,
+        "critical": 0
+      },
+      "medium": {
+        "low": 1,
+        "medium": 0,
+        "high": 0,
+        "critical": 0
+      },
+      "high": {
+        "low": 0,
+        "medium": 2,
+        "high": 11,
+        "critical": 0
+      },
+      "critical": {
+        "low": 0,
+        "medium": 0,
+        "high": 2,
+        "critical": 2
+      }
+    },
+    "misclassified_examples": [
+      {
+        "text": "Emergency alert. Exit the room immediately.",
+        "event_type": "transcript",
+        "actual": "critical",
+        "predicted": "high",
+        "confidence": 0.4221
+      },
+      {
+        "text": "Stop and evacuate now, the building alarm is active.",
+        "event_type": "transcript",
+        "actual": "critical",
+        "predicted": "high",
+        "confidence": 0.9771
+      },
+      {
+        "text": "The class roster changed this morning.",
+        "event_type": "transcript",
+        "actual": "medium",
+        "predicted": "low",
+        "confidence": 0.5022
+      },
+      {
+        "text": "Error banner appeared at the top of the page.",
+        "event_type": "screen",
+        "actual": "high",
+        "predicted": "medium",
+        "confidence": 0.4462
+      },
+      {
+        "text": "Primary action button became available.",
+        "event_type": "screen",
+        "actual": "high",
+        "predicted": "medium",
+        "confidence": 0.4242
+      }
+    ]
+  }
+}
